@@ -14,6 +14,7 @@
   https://www.staff.science.uu.nl/~yumak001/UUVHC/index.html
 */
 
+using System;
 using System.Xml;
 
 namespace BMLRealizer
@@ -52,8 +53,12 @@ namespace BMLRealizer
         {
             base.Parse(reader);
 
-            amount = TryParseAtribute<float>(reader, "amount", 0.5f, false);
-            overshoot = TryParseAtribute<float>(reader, "overshoot", 0.0f, false);
+            string strAmount = TryParseAtribute<string>(reader, "amount", "0.5", false);
+
+            amount = (float)Convert.ToDouble(strAmount);
+
+            string strOvershoot = TryParseAtribute<string>(reader, "overshoot", "0.0", false);
+            overshoot = (float)Convert.ToDouble(strOvershoot);
 
             TryParseSyncPoint(reader, "start");
             TryParseSyncPoint(reader, "attackPeak");
