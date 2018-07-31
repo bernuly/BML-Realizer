@@ -47,6 +47,9 @@ namespace BMLRealizer
         /// </summary>
         private float timer = 0.0f;
 
+        public float TD;
+
+
         /// <summary>
         /// the ID of BML block which triggerBlockId is resided (optional)
         /// </summary>
@@ -67,6 +70,7 @@ namespace BMLRealizer
         /// </summary>
         private bool completed;
 
+        public float zeroTime;
 
         /// <summary>
         /// the contructor of BML Sync Point.
@@ -77,6 +81,7 @@ namespace BMLRealizer
         {
             parentBlock = parent;
 
+            zeroTime = parent.GetOffset(); //global zero time
             completed = false;
 
             this.eventName = eventName;
@@ -120,7 +125,7 @@ namespace BMLRealizer
                     }
                 }
 
-                timer = offset;
+                timer = offset; 
             }
         }
 
@@ -130,16 +135,19 @@ namespace BMLRealizer
         /// <param name="realizer"></param> The realizer
         public void Update(RageBMLRealizer bmlNet)
         {
+
+            TD = (bmlNet.Timer - zeroTime);
             // do not need to check if this synpoint is already completed.
             // TODO busy waiting ?
             if (completed)
                 return;
 
             // check if the timer is safe to used.
-            if (IsTimerSafe(bmlNet.ScheduledBlocks, bmlNet.Timer))
-            {
-                if (bmlNet.Timer >= timer)
+//            if (IsTimerSafe(bmlNet.ScheduledBlocks, (bmlNet.Timer - zeroTime))) //time relative to own creation time...
+//            {
+                if ((bmlNet.Timer - zeroTime) >= timer)
                 {
+                
                     // complete this syncpoint
                     TriggerSyncPoint();
 
@@ -161,7 +169,7 @@ namespace BMLRealizer
                     }
 
                 }
-            }
+//            }
         }
 
         /// <summary>
@@ -179,6 +187,9 @@ namespace BMLRealizer
 
             return false;
         }
+
+
+        public float getTimer() { return timer;  }
 
         /// <summary>
         /// is this syncpoint already completed ?

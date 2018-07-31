@@ -46,6 +46,13 @@ namespace BMLRealizer
         public BMLBml parentBml;
 
 
+        private float offset = 0;
+
+        public void SetOffset(float _offset) { offset = _offset; }
+        public float GetOffset() { return offset; }
+
+
+
         /// <summary>
         /// empty constructor
         /// </summary>

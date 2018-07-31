@@ -258,6 +258,7 @@ namespace AssetPackage
                         {
                             Type t = blocks[reader.Name];
                             BMLBlock instance = (BMLBlock)Activator.CreateInstance(t);
+                            instance.SetOffset(timer);
                             instance.Parse(reader);
 
                             // TODO: need to accomodate different tag such as constraint, ...
